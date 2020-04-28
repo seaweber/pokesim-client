@@ -1,5 +1,8 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
+import {Link} from 'react-router-dom';
+
+
 function BattleButtons (){
 
 	const style = {
@@ -7,9 +10,9 @@ function BattleButtons (){
 	}
 	return (
 		<div>
-			<Button variant="danger"  style= {style}>Attack</Button>
-			<Button variant="success" style= {style}>Heal</Button>
-			<Button variant="warning" style= {style}>Run</Button>
+			<Link to='/battlepage'>
+				<Button variant="danger"  style= {style}>Fight</Button>
+			</Link>
 		</div>
 
 

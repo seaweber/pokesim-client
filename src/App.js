@@ -8,6 +8,7 @@ import {
 import './App.css';
 
 import PartyList from './components/PartyList'
+import BattlePage from './components/BattlePage'
 
 function App() {
 
@@ -17,18 +18,17 @@ function App() {
     };
 
     return (
-        <div className="App" style={ containerStyles } >
+  
             <Router>
                 <Switch>
-                    <Route>
-
-                        <PartyList exact path="/" />
-                        
-
-                    </Route>
+                    <div className="App" style={ containerStyles } >
+                        <Route exact path="/" component={PartyList} />
+                        <Route path="/battlepage" component={BattlePage} />
+                    </div>
                 </Switch>
             </Router>
-        </div>
+
+
     );
 }
 

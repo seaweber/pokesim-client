@@ -42,6 +42,7 @@ function PartyList ( ) {
         response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
       });
     */
+    // https://pokemon-412.appspot.com/retrievepokemon?username=spencer
 
     const partyListItems = party
         .map( ( pokemon, index ) =>
