@@ -1,13 +1,17 @@
+//https://stackoverflow.com/questions/45980173/react-axios-network-error
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import {Link} from 'react-router-dom';
+import axios from 'axios';
 
 import PartyListItem from './PartyListItem';
 import PartyDetail from './PartyDetail';
 import PokemonData from '../pokemon.json';
 
 
-function BattlePage (){
+
+function BattlePage ( props ){
+
 
 	const style = {
 		margin: '1em'
@@ -44,11 +48,18 @@ function BattlePage (){
 
 
     ];
+    
 
+    
+     const getParty =  axios.get('https://pokemon-412.appspot.com/retrievepokemon?username=spencer').then(response => {
+            console.log(response)
+        })
+    
+    console.log(getParty)
     /*
     axios({
       method: 'get',
-      url: 'http://cloudfunction.com/',
+      url: 'https://pokemon-412.appspot.com/retrievepokemon?username=spencer',
       responseType: 'stream'
     })
       .then(function (response) {
