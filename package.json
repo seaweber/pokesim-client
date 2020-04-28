@@ -1,6 +1,6 @@
 {
   "homepage": "https://pages.github.iu.edu/abislam/pokemon-frontend/",
-  "name": "/",
+  "name": "pokemon-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

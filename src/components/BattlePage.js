@@ -56,6 +56,7 @@ function BattlePage ( props ){
         })
     
     console.log(getParty)
+
     /*
     axios({
       method: 'get',
@@ -107,7 +108,7 @@ function BattlePage ( props ){
 		    </div>	        
 
 			<Button variant="danger"  style= {style}>Start Fight</Button>
-			<Link to='/'>
+			<Link to='/abislam/pokemon-frontend'>
 				<Button variant="danger"  style= {style}>Back</Button>
 			</Link>
 		</div>

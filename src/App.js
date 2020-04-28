@@ -22,7 +22,7 @@ function App() {
             <Router>
                 <Switch>
                     <div className="App" style={ containerStyles } >
-                        <Route exact path="/" component={PartyList} />
+                        <Route exact path="/abislam/pokemon-frontend" component={PartyList} />
                         <Route path="/battlepage" component={BattlePage} />
                     </div>
                 </Switch>
