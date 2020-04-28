@@ -45,7 +45,17 @@ function BattlePage (){
 
     ];
 
-
+    /*
+    axios({
+      method: 'get',
+      url: 'http://cloudfunction.com/',
+      responseType: 'stream'
+    })
+      .then(function (response) {
+        response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
+      });
+    */
+    // https://pokemon-412.appspot.com/retrievepokemon?username=spencer
     const partyListItems1 = party1
         .map( ( pokemon, index ) =>
             <PartyListItem
@@ -54,14 +64,16 @@ function BattlePage (){
         );
 
 
+
     const partyListItems2 = party2
         .map( ( pokemon, index ) =>
             <PartyListItem
                 key={ index }
                 pokemon={ pokemon }/>
+
         );
 
-
+    
     const scaleView ={
         transform: 'scale(0.7)',
 
