@@ -51,7 +51,7 @@ function BattlePage ( props ){
     
 
     
-     const getParty =  axios.get('https://pokemon-412.appspot.com/retrievepokemon?username=spencer').then(response => {
+     const getParty =  axios.get('https://pokemon-412.appspot.com/retrievepokemon?username=abed').then(response => {
             console.log(response)
         })
     

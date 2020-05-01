@@ -7,7 +7,8 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+//import BrowserRouter from 'react-router-dom/BrowserRouter'
+//https://stackoverflow.com/questions/54427793/getting-blank-page-after-react-app-publish-in-github
 const store = createStore( rootReducer );
 
 ReactDOM.render(
