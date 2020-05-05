@@ -1,5 +1,5 @@
 import React from 'react';
-
+import {Link} from 'react-router-dom';
 function PartyForm(){
 	return(
 
@@ -16,12 +16,18 @@ function PartyForm(){
 
 	           
 	            <div>
-	                <button type="submit">Choose my Pokemon!</button>
+	            	<Link to='/abislam/pokemon-frontend'>
+	            		<button type="submit">Choose my Pokemon!</button>
+	            	</Link>
+	                
 	            </div>
 	        </form>
 	        <form method="POST" action="/generaterandomparty">
 	            <div>
-	                <button type="submit">I want random Pokemon!</button>
+	            	<Link to='/abislam/pokemon-frontend'>
+	            		<button type="submit">I want random Pokemon!</button>
+	            	</Link>
+	                
 	            </div>
 	        </form>			
 		</div>
