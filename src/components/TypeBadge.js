@@ -7,7 +7,7 @@ function TypeBadge ( props ) {
       switch ( props.type ) {
 
           case 'normal': return '#A8A878';
-          case 'fight': return '#C03028';
+          case 'fighting': return '#C03028';
           case 'flying': return '#A890F0';
           case 'poison': return '#A040A0';
           case 'ground': return '#E0C068';

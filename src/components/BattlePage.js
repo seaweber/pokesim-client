@@ -1,115 +1,121 @@
-//https://stackoverflow.com/questions/45980173/react-axios-network-error
-import React from 'react';
+
+import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import {Link} from 'react-router-dom';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 
-import PartyListItem from './PartyListItem';
-import PartyDetail from './PartyDetail';
-import PokemonData from '../pokemon.json';
-
-
+import BattleItem from './BattleItem';
+import { ReactSortable } from "react-sortablejs";
+import { useDispatch, useSelector } from 'react-redux';
+import { sendPickOrder, readyUp, setOrdered } from '../redux/actions/setActions';
+import { Redirect } from "react-router-dom";
 
 function BattlePage ( props ){
 
+	const dispatch = useDispatch();
+
+	const session_id = useSelector( state => state.session_id );
+
+	const ordered = useSelector( state => state.ordered );
+
+	const [ ready, setReady ] = useState( false );
 
 	const style = {
 		margin: '1em'
-	}
+	};
 
-    const listContainerStyles = {
+    const theirListContainerStyles = {
 
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',
         justifyItems: 'center',
     };
 
+    const myListContainerStyles = {
 
-    const party1 = [
-
-        PokemonData[388],
-        PokemonData[149],
-        PokemonData[142],
-        PokemonData[286],
-        PokemonData[7],
-        PokemonData[102]
-
-
-    ];
-
-    const party2 = [
-
-        PokemonData[200],
-        PokemonData[100],
-        PokemonData[150],
-        PokemonData[300],
-        PokemonData[11],
-        PokemonData[480]
-
-
-    ];
-    
-
-    
-     const getParty =  axios.get('https://pokemon-412.appspot.com/retrievepokemon?username=abed').then(response => {
-            console.log(response)
-        })
-    
-    console.log(getParty)
-
-    /*
-    axios({
-      method: 'get',
-      url: 'https://pokemon-412.appspot.com/retrievepokemon?username=spencer',
-      responseType: 'stream'
-    })
-      .then(function (response) {
-        response.data.pipe(fs.createWriteStream('ada_lovelace.jpg'))
-      });
-    */
-    // https://pokemon-412.appspot.com/retrievepokemon?username=spencer
-    const partyListItems1 = party1
-        .map( ( pokemon, index ) =>
-            <PartyListItem
-                key={ index }
-                pokemon={ pokemon }/>
-        );
-
-
-
-    const partyListItems2 = party2
-        .map( ( pokemon, index ) =>
-            <PartyListItem
-                key={ index }
-                pokemon={ pokemon }/>
-
-        );
-
-    
-    const scaleView ={
-        transform: 'scale(0.7)',
-
+        display: 'flex',
+        justifyItems: 'center',
     };
 
+	const currentUser = props.user;
+
+    const gamestate = useSelector( state => state.gamestate );
+
+    const myParty = gamestate.players[ currentUser.uid ].party.filter( pokemon => pokemon.alive );
+
+	const [ sortableParty, setSortableParty ] = useState( myParty );
+
+	const theirParty = gamestate.players[ Object.keys( gamestate.players ).filter( player => player !== currentUser.uid ) ].party.filter( pokemon => pokemon.alive );
+
+	const sendOrder = () => {
+		dispatch( sendPickOrder( { session_id: session_id, user_id: currentUser.uid, party_order: sortableParty } ) );
+		dispatch( setOrdered() );
+	};
+
+	const sendReady = () => {
+		dispatch( readyUp( { session_id: session_id, user_id: currentUser.uid } ) );
+	};
+
+    const theirPartyListItems = theirParty
+        .map( ( pokemon, index ) =>
+            <BattleItem
+                key={ index }
+                pokemon={ pokemon }/>
+        );
+
+	const myPartyListItems = myParty
+        .map( ( pokemon, index ) =>
+            <BattleItem
+                key={ index }
+                pokemon={ pokemon }
+				poke_id={ pokemon.pokemon_id }/>
+        );
 
 
-
+    const scaleView = {
+        transform: 'scale(0.7)',
+    };
 
 	return (
 		<div>
-			<div style={scaleView}>
-		        <div style={ listContainerStyles }>
-		            { partyListItems1 }
+			{ gamestate === null && <Redirect to={ '/match' }/> }
+            { `User: ${ currentUser.uid }` }<br/>
+            { `Props: ${ props.user.uid }` }<br/>
+			{ `Session_ID: ${ session_id }` }
+            <div style={scaleView}>
+				Opponent's Party
+		        <div style={ theirListContainerStyles }>
+		            { theirPartyListItems }
 		        </div>
-		        <h1>VS</h1>
-		        <div style={ listContainerStyles }>
-		            { partyListItems2}
-		        </div>
-		    </div>	        
+		        <h1>
+					{
+						( myParty.length && theirParty.length ) ?
+							'VS'
+							: myParty.length ?
+								'You Win!'
+								: 'You Lose!'
+					}
+				</h1>
+				{!ordered &&
+					<ReactSortable list={sortableParty} setList={setSortableParty} style={myListContainerStyles}>
+						{
+							sortableParty.map((pokemon, index) =>
+								<BattleItem
+									key={index}
+									pokemon={pokemon}/>)
+						}
+					</ReactSortable>}
+				{ ordered && <div style={myListContainerStyles}>{ myPartyListItems }</div> }
+				My Party
+		    </div>
 
-			<Button variant="danger"  style= {style}>Start Fight</Button>
-			<Link to='/abislam/pokemon-frontend'>
-				<Button variant="danger"  style= {style}>Back</Button>
+			{ !ordered ?
+				<Button variant="danger" style= {style} onClick={ () => sendOrder() }>Start Fight</Button>
+				: !ready ?
+					<Button variant="danger" style= {style} onClick={ () => sendReady() }>Ready Up</Button>
+					: <Button variant="disabled" style= {style} onClick={ () => sendOrder() }>Awaiting Opponent</Button>
+			}
+			<Link to='/match'>
+				<Button variant="danger" style= {style}>Back</Button>
 			</Link>
 		</div>
 

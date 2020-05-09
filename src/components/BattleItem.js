@@ -1,7 +1,7 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
-import { setPartyDetail } from "../redux/actions/setActions";
+import { swapPokemon } from "../redux/actions/setActions";
 
 import TypeBadge from './TypeBadge';
 
@@ -9,6 +9,10 @@ function PartyListItem ( props ) {
 
 
     const dispatch = useDispatch();
+
+    const ordered = useSelector( state => state.ordered );
+    const session_id = useSelector( state => state.session_id );
+    const currentUser = useSelector( state => state.currentUser );
 
 
     const formattedName = () => {
@@ -91,10 +95,15 @@ function PartyListItem ( props ) {
         cursor: 'pointer'
     };
 
+    const sendSwap = ( pokemon_id ) => {
+        if ( ordered ) dispatch( swapPokemon( { session_id: session_id, user_id: currentUser.uid, swap: pokemon_id } ) );
+        console.log('CLICKED FOR SWAP');
+    };
+
     return(
         <div
             style={ containerStyles }
-            onClick={ () => dispatch( setPartyDetail( props.pokemon ) ) }>
+            onClick={ () => sendSwap( props.poke_id ) }>
 
             <span style={{ marginBottom: '.5em'}}>{ formattedName() }</span>
 

@@ -1,5 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+
+import { signInWithGoogle } from '../auth/fire';
+
 function UsernameForm(){
 	return(
 
@@ -13,9 +16,10 @@ function UsernameForm(){
 	            	<Link to='/PartyForm'>
 	            		<button type="submit">Choose my username!</button>
 	            	</Link>
-	                
-	            </div>
-	        </form>		
+
+				</div>
+	        </form>
+			<button onClick={ () => signInWithGoogle() }>Google Signin</button>
 		</div>
 	);
 }

@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
 import { Provider } from "react-redux";
 import rootReducer from "./redux/reducers";
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import socketIO from 'socket.io-client';
+import socketIoMiddleware from 'redux-socket.io-middleware';
+import { applyMiddleware, createStore } from 'redux'
+
 //import BrowserRouter from 'react-router-dom/BrowserRouter'
 //https://stackoverflow.com/questions/54427793/getting-blank-page-after-react-app-publish-in-github
-const store = createStore( rootReducer );
+const socket = socketIO.connect('localhost:8080');
+
+const store = createStore( rootReducer, applyMiddleware( socketIoMiddleware( socket ) ) );
 
 ReactDOM.render(
     <Provider store={ store }>
