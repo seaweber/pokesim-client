@@ -6,6 +6,8 @@ import { createLobby, joinLobby, setSessionID } from '../redux/actions/setAction
 
 import { Redirect } from 'react-router-dom';
 
+import Button from "react-bootstrap/Button";
+
 const { uuid } = require('uuidv4');
 
 function MatchMaking ( ) {
@@ -15,8 +17,6 @@ function MatchMaking ( ) {
     const currentUser = useSelector( state => state.currentUser );
 
     const gamestate = useSelector( state => state.gamestate );
-
-    const [ loading, toggleLoading ] = useState( false );
 
     const [ values, setValues ] = useState( {
         myCode: "",
@@ -49,21 +49,34 @@ function MatchMaking ( ) {
 
         dispatch( setSessionID( session_id ) );
 
-        toggleLoading( true );
+    };
 
+    const containerStyles = {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        height: '40vh',
+        margin: 'auto'
+    };
+
+    const inputStyles = {
+        width: '500px',
+        height: '32px',
+        fontSize: '24px',
     };
 
     return(
-        <div>
+        <div style={ containerStyles }>
             { gamestate && <Redirect to={ '/battle' } /> }
-           <button onClick={ () => makeLobby() }>Create Lobby</button>
-            <input type="disabled" value={ values.myCode } placeholder={"Share This Code"}/>
-            <br/>
-            <br/>
-            <br/>
-            <input placeholder={ " Paste Code Here" }  onChange={ handleChange("theirCode" ) }/>
-            <button onClick={ () => enterLobby() } >Join Lobby</button><br/>
-            { `Gamestate: ${ JSON.stringify(gamestate) }` }
+            <div>
+                <Button variant="danger" onClick={ () => makeLobby() }>Create Lobby</Button>
+                <input style={ inputStyles } type="disabled" value={ values.myCode } placeholder={"Share This Code"}/>
+            </div>
+
+            <div>
+                <input style={ inputStyles } placeholder={ " Paste Code Here" }  onChange={ handleChange("theirCode" ) }/>
+                <Button variant="danger" onClick={ () => enterLobby() } >Join Lobby</Button><br/>
+            </div>
         </div>
 
     );

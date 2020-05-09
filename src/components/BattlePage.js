@@ -7,7 +7,6 @@ import BattleItem from './BattleItem';
 import { ReactSortable } from "react-sortablejs";
 import { useDispatch, useSelector } from 'react-redux';
 import { sendPickOrder, readyUp, setOrdered } from '../redux/actions/setActions';
-import { Redirect } from "react-router-dom";
 
 function BattlePage ( props ){
 
@@ -15,12 +14,16 @@ function BattlePage ( props ){
 
 	const session_id = useSelector( state => state.session_id );
 
+	const currentUser = useSelector( state => state.currentUser );
+
 	const ordered = useSelector( state => state.ordered );
 
 	const [ ready, setReady ] = useState( false );
 
 	const style = {
-		margin: '1em'
+		margin: '1em',
+		padding: '.5em',
+		fontSize: '32px'
 	};
 
     const theirListContainerStyles = {
@@ -35,8 +38,6 @@ function BattlePage ( props ){
         display: 'flex',
         justifyItems: 'center',
     };
-
-	const currentUser = props.user;
 
     const gamestate = useSelector( state => state.gamestate );
 
@@ -76,13 +77,8 @@ function BattlePage ( props ){
     };
 
 	return (
-		<div>
-			{ gamestate === null && <Redirect to={ '/match' }/> }
-            { `User: ${ currentUser.uid }` }<br/>
-            { `Props: ${ props.user.uid }` }<br/>
-			{ `Session_ID: ${ session_id }` }
             <div style={scaleView}>
-				Opponent's Party
+				<span style={ { fontSize: '48px' } }>Opponent's Party</span>
 		        <div style={ theirListContainerStyles }>
 		            { theirPartyListItems }
 		        </div>
@@ -105,20 +101,15 @@ function BattlePage ( props ){
 						}
 					</ReactSortable>}
 				{ ordered && <div style={myListContainerStyles}>{ myPartyListItems }</div> }
-				My Party
+				<span style={ { fontSize: '48px' } }>My Party</span><br/>
+
+				{ !ordered ?
+					<Button variant="danger" style= {style} onClick={ () => sendOrder() }>Start Fight</Button>
+					: !ready ?
+						<Button variant="danger" style= {style} onClick={ () => sendReady() }>Ready Up</Button>
+						: <Button variant="disabled" style= {style} onClick={ () => sendOrder() }>Awaiting Opponent</Button>
+				}
 		    </div>
-
-			{ !ordered ?
-				<Button variant="danger" style= {style} onClick={ () => sendOrder() }>Start Fight</Button>
-				: !ready ?
-					<Button variant="danger" style= {style} onClick={ () => sendReady() }>Ready Up</Button>
-					: <Button variant="disabled" style= {style} onClick={ () => sendOrder() }>Awaiting Opponent</Button>
-			}
-			<Link to='/match'>
-				<Button variant="danger" style= {style}>Back</Button>
-			</Link>
-		</div>
-
 
 	)
 }

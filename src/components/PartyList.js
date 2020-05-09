@@ -55,10 +55,10 @@ function PartyList ( ) {
 
         // positioning
         display: 'flex',
-        flexDirection: 'row',
+        flexDirection: 'column',
 
-        // sizing
-        height: '50vh',
+        width: '60vw',
+        height: '90vh'
     };
 
 
@@ -70,7 +70,7 @@ function PartyList ( ) {
     };
 
     const scaleView ={
-        transform: 'scale(0.7)',
+        transform: 'scale(0.9)',
 
     };
 
@@ -78,8 +78,6 @@ function PartyList ( ) {
         <div>
             
             <div style={ scaleView }>
-                <PCList />
-
                 
                 <div style={ containerStyles }>
 
@@ -92,7 +90,6 @@ function PartyList ( ) {
                 </div>
 
             </div>
-            <BattleButtons/>
         </div>
 
         

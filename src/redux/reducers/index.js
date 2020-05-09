@@ -16,9 +16,6 @@ const rootReducer = ( state = initialState, action ) => {
 
     if ( action.type === 'lobby-ready' ) {
 
-        console.log('LOBBY READY');
-        console.log(action.state);
-
         return {
             ...state,
             gamestate: action.state,

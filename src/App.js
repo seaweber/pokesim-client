@@ -3,8 +3,10 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
+    NavLink,
     Redirect
 } from "react-router-dom";
+import Button from 'react-bootstrap/Button';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -12,10 +14,9 @@ import './App.css';
 
 import PartyList from './components/PartyList'
 import BattlePage from './components/BattlePage'
-import PartyForm from './components/PartyForm'
-import UsernameForm from './components/UsernameForm'
 import MatchMaking from './components/MatchMaking'
-import { auth } from "./auth/fire";
+import CoverPage from './components/CoverPage'
+import { auth, signInWithGoogle } from "./auth/fire";
 
 import { setCurrentUser } from './redux/actions/setActions';
 import axios from "axios";
@@ -30,13 +31,7 @@ function App() {
 
     const [ currentUser, setCurrentUserInState ] = useState( false );
 
-    const reduxUser = useSelector( state => state.currentUser );
-
-    const gamestate = useSelector( state => state.gamestate );
-
     const generatePartyForNewUser = user_id => {
-
-        console.log(`USER_ID: ${user_id}`);
 
         axios({
             method: 'post',
@@ -47,6 +42,8 @@ function App() {
     };
 
     useEffect( () => {
+
+        document.body.style.height = "90vh";
 
         auth.onAuthStateChanged(  user => {
             if ( user ) {
@@ -61,45 +58,61 @@ function App() {
                 setLoggedIn( true );
 
             } else {
-                console.log('SIGNED OUT');
+
                 setCurrentUserInState( null );
                 dispatch( setCurrentUser( null ) );
                 setLoggedIn( false );
             }
         });
-        console.log(`STATE: ${loggedIn}`)
     }, [ loggedIn ]);
 
     const containerStyles = {
         display: 'flex',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        height: '100%',
+        alignItems: 'center',
+    };
+
+    const navStyles = {
+        width: '30vw',
+        height: '60px',
+        display: 'flex',
+        justifyContent: 'space-around',
+        alignItems: 'center',
+        backgroundColor: 'gray'
     };
 
     return (
         <AuthContext.Provider value={ { loggedIn, setLoggedIn } }>
-            <button onClick={ () => auth.signOut() }>Sign Out</button><br/>
-            { currentUser && `STATE: ${ currentUser.displayName }`}<br/>
-            { reduxUser && `REDUX: ${ reduxUser.displayName }`}
+
             <Router>
+
+                <div style={ navStyles }>
+                    { !loggedIn ?
+                        <Button variant="danger" onClick={ () => signInWithGoogle() }>Sign In</Button>
+                        : <Button variant="danger" onClick={ () => auth.signOut() }>Sign Out</Button> }
+                    { loggedIn && <NavLink to={ '/party' }><Button variant="danger">Party</Button></NavLink> }
+                    { loggedIn && <NavLink to={ '/match' }><Button variant="danger">Battle</Button></NavLink> }
+                </div>
+
                 <Switch>
-                    <Route path="/UsernameForm" component={ UsernameForm }>
-                        { loggedIn && <Redirect to={ "/" }/>}
-                    </Route>
                     <div className="App" style={ containerStyles } >
 
-                        <Route path="/match" exact component={ MatchMaking }/>
-
-                        <Route path="/PartyForm" component={ PartyForm }>
-                            { !loggedIn && <Redirect to={ "/UsernameForm" }/> }
+                        <Route path="/" exact component={ CoverPage }>
+                            { loggedIn && <Redirect to={ '/party' }/> }
                         </Route>
 
-                        <Route exact path="/PartyList" component={ PartyList }/>
+                        <Route path="/match" component={ MatchMaking }>
+                            { !loggedIn && <Redirect to={ '/' }/> }
+                        </Route>
 
+                        <Route path="/party" component={ PartyList }>
+                            { !loggedIn && <Redirect to={ '/' }/> }
+                        </Route>
 
-                       <Route
-                           path="/battle"
-                           render={  () => <BattlePage user={ currentUser } />}
-                       />
+                        <Route path="/battle" component={ BattlePage }>
+                            { !loggedIn && <Redirect to={ '/' }/> }
+                        </Route>
 
                     </div>
                 </Switch>

@@ -16,6 +16,8 @@ const socket = socketIO.connect('localhost:8080');
 
 const store = createStore( rootReducer, applyMiddleware( socketIoMiddleware( socket ) ) );
 
+document.getElementById('root').style.height = '100%';
+
 ReactDOM.render(
     <Provider store={ store }>
         <App />
